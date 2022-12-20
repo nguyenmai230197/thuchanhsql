@@ -4,4 +4,25 @@ DROP TABLE IF EXISTS DIADIEMPHONG; DROP TABLE IF EXISTS DUAN; DROP TABLE IF EXIS
 --------------------------
 git: nguyenmai230197@gmail.com | Mattroi!23
 --------------------------
+Giờ em sẽ soạn các câu trả lời vào đây, ctrl + s lưu file và COMMIT push lên bình thường
 
+Để chắc chắn xem code đã lên hay chưa thì vào trình duyệt xem cái là bít. OK?
+ok 
+
+--------------------------
+1. Cho biết danh sách nhân viên của công ty.
+Mai: select * from nhanvien n
+CHECK:
+
+--------------------------
+
+2. Cho biết họ và tên của nhân viên trong công ty. (sử dụng +’ ‘+ để nối chuỗi)	select n.ho, n.tendem, n.ten from nhanvien n
+
+
+--------------------------
+3. Cho biết danh sách nhân viên thuộc phòng số 5. 	"select n.ho, n.tendem, n.ten from nhanvien n 
+where n.phong = 5"
+4. Cho biết thông tin của những phòng ban không phải là phòng ‘Dieu hanh’. 	select * from phongban p where not p.tenpb = 'Dieu hannh'
+5. Cho biết danh sách các nhân viên thuộc phòng ‘Dieu hanh’. 	
+6. Cho biết mã nhân viên (MA_NVIEN) làm việc cho đề án số 3. 	
+7. Cho biết mã số và tên các đề án triển khai ở Phú Nhuận. 	
