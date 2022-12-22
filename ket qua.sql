@@ -18,37 +18,120 @@ select * from phongban p where not p.tenpb = 'Dieu hannh'
 => select * from phongban p where  p.tenpb <> 'Dieu hannh'
 --------------------------
 5. Cho biết danh sách các nhân viên thuộc phòng ‘Dieu hanh’. 
-select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, p.tenpb from nhanvien n join phongban p on n.phong = p.mapb where p.tenpb = 'Dieu hanh'
+select * from nhanvien n join phongban p on n.phong = p.mapb
+where p.tenpb = 'Dieu hanh'
+=> C1: Sử dụng phép join
+select nv.* from nhanvien nv join phongban pb on nv.phong = pb.mapb
+where pb.tenpb = 'DieuHanh'
+
+C2: Sử dung truy vẫn lồng
+select nv.* from nhanvien nv
+where nv.phong =
+(
+    select pb.mapb from phongban pb
+    where pb.tenpb =  'Dieu hanh'
+)
+
+* Cho biết danh sách nhân viên, TÊN PHÒNG BAN của những nhân viên KHÔNG THUỘC phòng điều hành
+select nv.*, pb.tenpb from nhanvien nv join phongban pb on nv.phong = pb.mapb
+where not pb.tenpb = 'DieuHanh'
+
+C2: Sử dung truy vẫn lồng
+select nv.* from nhanvien nv
+where nv.phong in
+(
+select pb.mapb from phongban pb
+where pb.tenpb <> 'Dieu hanh'
+)
+
 --------------------------
 6. Cho biết mã nhân viên (MA_NVIEN) làm việc cho đề án số 3
-
+=> select pc.manv from phancong pc where pc.mada = '3'
 --------------------------
 7. Cho biết mã số và tên các đề án triển khai ở Phú Nhuận
 select d.tenda from duan d where d.diadiem = 'Phu Nhuan'
+=> select d.mada, d.tenda from duan d where d.diadiem = 'Phu Nhuan'
 
 8. Liệt kê các nhân viên có địa chỉ thuộc quận Phú Nhuận. 
 select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.diachi from nhanvien n where n.diachi like '%Phu Nhuan%'
+=> select n.* from nhanvien n where n.diachi like '%Phu Nhuan%'
 
 9. Cho biết họ tên các nhân viên nam có mức lương nhỏ hơn 30000.
 select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n where n.gtinh='Nam' and n.luong<30000
+=> OK
 
 10. Cho biết các nhân viên phòng 4 và có mức lương trên 30000.
 select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n where n.phong=4 and n.luong>30000 
+=> select n.* from nhanvien n where n.phong=4 and n.luong>30000
 
 11. Cho biết tổng số lượng nhân viên và lương trung bình của nhân viên. 
 select count (n.manv) as tong_so_nhan_vien, avg (n.luong) as luong_trung_binh from nhanvien n 
+=> OK
 
 12. Cho biết những nhân viên có địa chỉ ở TP.HCM.
 select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.diachi from nhanvien n where n.diachi like '%TPHCM%'
- 
+=> select n.* from nhanvien n where n.diachi like '%TPHCM%'
+
 13. Cho biết mã nhân viên và tiền thưởng tương ứng. Với tiền thưởng = 60% của lương. 
 select n.manv as ma_nhan_vien, n.luong*60/100 as tien_thuong from nhanvien n 
+=> ok
 
 14. Cho biết họ tên trưởng phòng của phòng ban ‘Nghien cuu’.
 select p.trphong from phongban p where p.tenpb = 'Nghien cuu'
+ => ok
  
 16. Cho biết mã nhân viên có người thân và tham gia đề án. 
-
+select p.manv, sum (p.sogio) as so_gio from phancong p join thannhan t on p.manv = t.manv
+group by p.manv having count(p.sogio)>0
+=> 
 
 17. Danh sách các mã đề án có nhân viên họ ‘Nguyen’ tham gia.
+select p.mada from phancong p join nhanvien n on p.manv = n.manv where n.ho = 'Nguyen' 
+=> 
 
+18. Cho biết tên nhân viên sinh vào những năm 1950.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n where n.ngsinh >= '1950-01-01' and n.ngsinh < '1960-01-01'
+=> 
+ 
+19. Liệt kê các nữ nhân viên thuộc phòng ‘Nghien cuu’
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n join phongban p on n.phong = p.mapb 
+where n.gtinh = 'Nu' and p.tenpb = 'Ngien cuu'
+=> 
+
+20. Cho biết MaNV, TenNV, Phong, NgSinh của những nhân viên Nam. Sắp xếp 
+theo phòng giảm dần và sau đó ngày sinh tăng dần. 
+select n.manv, concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.phong, n.ngsinh from nhanvien n
+order by n.phong desc 
+=> 
+
+select n.manv, concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.phong, n.ngsinh from nhanvien n
+order by n.ngsinh asc 
+=> 
+
+21. Cho biết kết quả lương mới (được tăng lên 10%) của của các nhân viên tham gia đề
+án “San pham X” 
+select * from nhanvien n select * from phancong p 
+select * from duan d 
+=> 
+
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten 
+from nhanvien n 
+join phancong p
+on n.manv = p.manv
+join duan d
+on p.mada = d.mada 
+where d.tenda = 'San Pham X'
+=> 
+
+
+22. Cho biết họ tên những nhân viên có tuổi từ 40 trở lên.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n 
+where (now - n.ngsinh) >= 40 (chưa xong)
+
+23. Cho biết mã các nhân viên nữ có tham gia đề án số 1. 
+24. Cho biết tên nhân viên không có thân nhân nào. 
+25. Cho biết danh sách các nhân viên có mức lương từ 30000 đến 40000. 
+26. Cho biết tên hai nhân viên có cùng lương. 
+27. Cho biết tên nhân viên và số lượng các đề án mà nhân viên đó tham gia. 
+28. Cho biết họ tên các trưởng phòng. 
+29. Cho biết tên nhân viên và tên thân nhân có cùng ngày sinh với mình.
