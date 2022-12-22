@@ -21,5 +21,34 @@ select * from phongban p where not p.tenpb = 'Dieu hannh'
 select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, p.tenpb from nhanvien n join phongban p on n.phong = p.mapb where p.tenpb = 'Dieu hanh'
 --------------------------
 6. Cho biết mã nhân viên (MA_NVIEN) làm việc cho đề án số 3
+
 --------------------------
 7. Cho biết mã số và tên các đề án triển khai ở Phú Nhuận
+select d.tenda from duan d where d.diadiem = 'Phu Nhuan'
+
+8. Liệt kê các nhân viên có địa chỉ thuộc quận Phú Nhuận. 
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.diachi from nhanvien n where n.diachi like '%Phu Nhuan%'
+
+9. Cho biết họ tên các nhân viên nam có mức lương nhỏ hơn 30000.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n where n.gtinh='Nam' and n.luong<30000
+
+10. Cho biết các nhân viên phòng 4 và có mức lương trên 30000.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n where n.phong=4 and n.luong>30000 
+
+11. Cho biết tổng số lượng nhân viên và lương trung bình của nhân viên. 
+select count (n.manv) as tong_so_nhan_vien, avg (n.luong) as luong_trung_binh from nhanvien n 
+
+12. Cho biết những nhân viên có địa chỉ ở TP.HCM.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.diachi from nhanvien n where n.diachi like '%TPHCM%'
+ 
+13. Cho biết mã nhân viên và tiền thưởng tương ứng. Với tiền thưởng = 60% của lương. 
+select n.manv as ma_nhan_vien, n.luong*60/100 as tien_thuong from nhanvien n 
+
+14. Cho biết họ tên trưởng phòng của phòng ban ‘Nghien cuu’.
+select p.trphong from phongban p where p.tenpb = 'Nghien cuu'
+ 
+16. Cho biết mã nhân viên có người thân và tham gia đề án. 
+
+
+17. Danh sách các mã đề án có nhân viên họ ‘Nguyen’ tham gia.
+
