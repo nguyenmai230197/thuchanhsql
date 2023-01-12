@@ -129,9 +129,114 @@ select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n
 where (now - n.ngsinh) >= 40 (chưa xong)
 
 23. Cho biết mã các nhân viên nữ có tham gia đề án số 1. 
+select n.manv 
+from nhanvien n 
+join phancong p on n.manv=p.manv 
+where n.gtinh = 'Nu' and p.mada = 1
 24. Cho biết tên nhân viên không có thân nhân nào. 
-25. Cho biết danh sách các nhân viên có mức lương từ 30000 đến 40000. 
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten 
+from nhanvien n 
+left outer join thannhan t on n.manv = t.manv
+where t.tentn is null
+25. Cho biết danh sách các nhân viên có mức lương từ 30000 đến 40000.
+select * from nhanvien n 
+where n.luong between 30000 and 40000
 26. Cho biết tên hai nhân viên có cùng lương. 
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.luong
+from nhanvien n 
+where n.luong in
+(select n.luong 
+from nhanvien n 
+group by n.luong 
+having count (luong) > 1)
 27. Cho biết tên nhân viên và số lượng các đề án mà nhân viên đó tham gia. 
-28. Cho biết họ tên các trưởng phòng. 
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, count (p.mada) as SL_Đề_án from nhanvien n
+join phancong p on n.manv = p.manv
+
+28. Cho biết họ tên các trưởng phòng.
+select p.trphong  from phongban p 
+
 29. Cho biết tên nhân viên và tên thân nhân có cùng ngày sinh với mình.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, t.tentn as Ten_than_nhan from nhanvien n, thannhan t
+where n.ngsinh = t.ngsinh
+
+30. Cho biết họ tên, mức lương, phòng của các nhân viên thuộc phòng số 4 hoặc các nhân 
+viên có mức lương lớn hơn 35000.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.luong, n.phong 
+from nhanvien n
+where n.phong = 4 or n.luong > 35000
+
+31. Cho biết lương trung bình của nhân viên có đề án tham gia hơn 10 giờ.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, avg(n.luong) as Luong_trung_binh, sum(p.sogio) as Tong_so_gio 
+from nhanvien n 
+join phancong p on n.manv = p.manv
+group by n.manv
+having sum(p.sogio)>10
+
+32. Với mỗi phòng ban cho biết số lượng nhân viên và tổng lương tương ứng.
+select p.*, count (n.manv) as so_luong_nv, sum(n.luong) as tong_luong from phongban p join nhanvien n on p.mapb = n.phong
+group by p.mapb
+
+33. Cho biết các nhân viên có lương cao nhất.
+select * from nhanvien n 
+where n.luong = 
+(select max (n.luong) from nhanvien n)
+
+34. Hãy cho biết nhân viên ‘Nguyen Bao Hung’ có bao nhiêu thân nhân.
+select count (t.tentn) as tong_than_nhan 
+from thannhan t join nhanvien n on t.manv = n.manv 
+group by n.manv 
+having concat(n.ho, ' ', n.tendem, ' ', n.ten) = 'Nguyen Bao Hung'
+
+35. Liệt kê các nhân viên chưa được phân công đề án nào.
+select * from nhanvien n join phancong p on n.manv = p.manv 
+where p.mada is null
+
+36. Cho biết tên phòng, số lượng nhân viên và tổng lương của từng phòng.
+select p.tenpb, count(n.manv) as so_luong_nv, sum (n.luong) as tong_luong 
+from phongban p join nhanvien n on p.mapb = n.phong 
+group by p.mapb 
+
+37. Cho biết tên phòng, số lượng nhân viên và mức lương trung bình của từng phòng.
+select p.tenpb, count(n.manv) as so_luong_nv, avg (n.luong) as tong_luong 
+from phongban p join nhanvien n on p.mapb = n.phong 
+group by p.mapb 
+
+38. Cho biết tên phòng, mức lương trung bình của phòng đó >30000. 
+select p.tenpb, avg (n.luong) as tong_luong 
+from phongban p join nhanvien n on p.mapb = n.phong 
+group by p.mapb 
+having avg (n.luong) > 30000
+
+39. Cho biết mã nhân viên (MA_NVIEN) nào có nhiều thân nhân nhất. 
+select n.manv as MA_NVIEN from nhanvien n join thannhan t on n.manv = t.manv 
+group by n.manv 
+having count (t.tentn) =
+(select max(x.so_than_nhan) from 
+       (select count (t.tentn) as so_than_nhan from thannhan t group by t.manv) x)
+
+40. Cho biết thông tin nhân viên nào có nhiều thân nhân nhất. 
+select n.* from nhanvien n join thannhan t on n.manv = t.manv 
+group by n.manv 
+having count (t.tentn) =
+(select max(x.so_than_nhan) from 
+       (select count (t.tentn) as so_than_nhan from thannhan t group by t.manv) x)
+
+41. Danh sách những nhân viên (HONV, TENNV) không tham gia đề án nào cả
+select n.ho, n.ten from nhanvien n 
+join phancong p on n.manv = p.manv 
+group by n.manv
+having sum (p.sogio) is null
+
+42. Liệt kê tên phòng ban và số lượng nhân viên trong các phòng ban có số lượng nhân 
+viên lớn hơn 3.
+select p.tenpb, count(n.manv) as so_luong_nhan_vien from phongban p join nhanvien n on p.mapb = n.phong 
+group by p.mapb having count(n.manv) >= 3 
+ 
+43. Tìm họ tên (HONV, HOLOT, TENNV) và địa chỉ (DIACHI) của những nhân viên
+làm việc cho một đề án ở PHU NHUAN nhưng phòng ban mà họ trực thuộc không tọa 
+lạc tại TPHCM 
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.diachi as DIACHI from nhanvien n
+join phancong p on n.manv = p.manv
+join duan d on p.mada = d.mada
+where d.phongql like '%Phu Nhuan%' and not d.diadiem like '%TPHCM%'
