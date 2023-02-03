@@ -128,6 +128,7 @@ where d.tenda = 'San Pham X'
 select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten from nhanvien n 
 where (now - n.ngsinh) >= 40 (chưa xong)
 
+
 23. Cho biết mã các nhân viên nữ có tham gia đề án số 1. 
 select n.manv 
 from nhanvien n 
@@ -233,10 +234,80 @@ viên lớn hơn 3.
 select p.tenpb, count(n.manv) as so_luong_nhan_vien from phongban p join nhanvien n on p.mapb = n.phong 
 group by p.mapb having count(n.manv) >= 3 
  
-43. Tìm họ tên (HONV, HOLOT, TENNV) và địa chỉ (DIACHI) của những nhân viên
+*43. Tìm họ tên (HONV, HOLOT, TENNV) và địa chỉ (DIACHI) của những nhân viên
 làm việc cho một đề án ở PHU NHUAN nhưng phòng ban mà họ trực thuộc không tọa 
 lạc tại TPHCM 
 select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, n.diachi as DIACHI from nhanvien n
 join phancong p on n.manv = p.manv
 join duan d on p.mada = d.mada
-where d.phongql like '%Phu Nhuan%' and not d.diadiem like '%TPHCM%'
+join diadiemphong ddp on ddp.mapb = n.phong 
+group by n.manv
+having d.diadiem = 'Phu Nhuan' and not ddp.diadiem = 'TPHCM'
+
+select * from phancong 
+select * from duan d
+select * from diadiemphong
+
+select * from nhanvien n
+join phancong p on n.manv = p.manv
+join duan d on p.mada = d.mada
+
+***44. Với mỗi phòng ban có hơn 3 nhân viên, cho biết mã phòng và số lượng nhân viên có
+lương lớn hơn 30000.
+select * from nhanvien n
+join phongban p on n.phong = p.mapb
+group by p.mapb
+having
+
+select * from phongban p
+
+***45. Với mỗi nhân viên tham gia nhiều đề án, cho biết họ tên nhân viên và tổng số giờ
+làm việc của từng nhân viên trong các đề án đó. Sắp xếp theo tên và họ tăng dần.
+select concat(n.ho, ' ', n.tendem, ' ', n.ten) as ho_va_ten, sum (p.sogio), p.mada
+from nhanvien n join phancong p on n.manv = p.manv
+group by
+
+***46. Tìm tên nhân viên và tên phòng ban mà nhân viên đó là trưởng phòng. Nếu nhân
+viên không là trưởng phòng, thì chỉ cần ghi tên nhân viên và giá trị null kế bên.
+
+select *
+from nhanvien n join phongban p on p.mapb = n.phong
+where n.manv = p.trphong 
+
+47. Cho biết tên đề án và tổng thời gian của từng đề án.
+select d.tenda, sum (p.sogio) as tong_thoi_gian from duan d join phancong p on d.mada = p.mada 
+group by d.mada
+
+48. Với những đề án tại Phú Nhuận cho biết MADA, MAPB chủ trì đề án.
+select distinct d.mada as MADA, d.phongql as MAPB
+from duan d join phancong p on d.mada = p.mada
+where d.diadiem = 'Phu Nhuan'
+
+49. Cho biết họ tên trưởng phòng cùng với ngày sinh và địa chỉ của người đó.
+
+select x.ho, x.ten, x.ngsinh, x. diachi from 
+(select * from phongban p 
+join nhanvien n on p.trphong = n.manv) x
+
+50. Tìm họ tên của nhân viên phòng số 5 có tham gia đề án "San pham X" với số giờ làm 
+việc > 10 giờ.
+select concat(x.ho, ' ', x.tendem, ' ', x.ten) as ho_va_ten from
+(select *from nhanvien n 
+join phancong p on n.manv = p.manv
+join duan d on p.mada = d.mada 
+where d.tenda = 'San pham X'and p.sogio > 10 and d.phongql = 5) x
+
+***51. Tìm họ tên của từng nhân viên và người phụ trách trực tiếp của nhân viên đó.
+select * from phancong p
+select * from nhanvien n1 join nhanvien n2 on n1.manv = n2.magsat 
+select * from phongban
+
+52. Tìm họ tên của những nhân viên được Phan Van Nghia quản lý trực tiếp.
+
+53. Với mỗi nhân viên cho biết mã số, họ tên, số lượng đề án và tổng thời gian mà họ
+tham gia. 
+54. Tìm mã và tên các nhân viên làm việc tại phòng ‘Nghien cuu’. 
+55. Tìm họ tên các nhân viên và tên các đề án nhân viên tham gia nếu có. 
+56. Cho biết MaNV, TenNV các nhân viên tham gia tất cả các đề án. 
+57. Cho biết Mã nhân viên được phân công từ 2 đề án trở lên. 
+58. Cho biết Tên những nhân viên tham gia từ 2 đề án trở lên.
