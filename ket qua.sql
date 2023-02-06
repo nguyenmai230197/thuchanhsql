@@ -189,6 +189,11 @@ from thannhan t join nhanvien n on t.manv = n.manv
 group by n.manv 
 having concat(n.ho, ' ', n.tendem, ' ', n.ten) = 'Nguyen Bao Hung'
 
+select nv.manv, count (nv.manv) as Tong_than_nhan 
+from nhanvien nv left join thannhan tn on nv.manv = tn.manv 
+where concat (nv.ho, ' ', nv.tendem, ' ', nv.ten) = 'Nguyen Bao Hung'
+group by nv.manv 
+
 35. Liệt kê các nhân viên chưa được phân công đề án nào.
 select * from nhanvien n join phancong p on n.manv = p.manv 
 where p.mada is null
